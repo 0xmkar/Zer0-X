@@ -21,27 +21,71 @@ export default function Home() {
     const fetchTwitterUsername = async () => {
       if (user?.sub?.startsWith("twitter|")) {
         const twitterId = user.sub.split("|")[1];
-
+  
         try {
           const response = await fetch(
             `http://localhost:5000/api/twitter-username?twitterId=${twitterId}`
           );
           const data = await response.json();
-          setTwitterUsername(data.username);
+          setTwitterUsername(data.username || "testname");
+          console.log(data);
+          
         } catch (error) {
           console.error("Error fetching Twitter username:", error);
-          setTwitterUsername("abcd");
+          // setTwitterUsername("abcd");
         }
       }
     };
-
-    fetchTwitterUsername();
-    const key = PrivateKeyGenerator();
-    console.log("Generated Private Key:", key);
-    setPrivateKey(key);
   
+    fetchTwitterUsername();
+  
+    const key = PrivateKeyGenerator();
+    setPrivateKey(key);
+    
+    const storeUserData = async () => {
+      if (!twitterUsername || !user?.sub) return;
+  
+      const twitterId = user.sub.split("|")[1]; // Extract Twitter ID
+      const publicKey = PublicKeyGenerator();
+      
+      try {
+        // Check if the user already exists in the database
+        const checkResponse = await fetch(
+          `http://localhost:5000/api/check-user?twitterId=${twitterId}`
+        );
+        const checkData = await checkResponse.json();
+        console.log(checkData);
+        
+        if (checkData.exists) {
+          console.log("User already exists in the database.");
+          return;
+        }
+  
+        // If user does not exist, save them
+        const newUser = {
+          username: twitterUsername,
+          twitterId,
+          publicKey,
+          privateKey: key,
+        };
+  
+        const saveResponse = await fetch("http://localhost:5000/api/save-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newUser),
+        });
+  
+        const data = await saveResponse.json();
+        console.log("User stored:", data);
+      } catch (error) {
+        console.error("Error storing user:", error);
+      }
+    };
+  
+    storeUserData();
   }, [user]);
-
+  
+  
   if (isLoading) {
     return <div>Loading ...</div>;
   }
@@ -112,9 +156,9 @@ export default function Home() {
                 <TransactionsTable />
               </div>
               {/* <PrivateKeyGenerator/> */}
-              <PublicKeyGenerator/>
+              {/* <PublicKeyGenerator/> */}
 
-              <PrivateKeyGeneratorTsx pvtKey={privateKey}/>
+              {/* <PrivateKeyGeneratorTsx pvtKey={privateKey}/> */}
             </>
           ) : (
             <div>Please login First</div>
