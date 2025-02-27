@@ -7,12 +7,16 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import LogoutButton from "../components/logoutButton";
 import LoginButton from "../components/loginButton";
+import { PrivateKeyGenerator, PublicKeyGenerator } from "../components/makeWallets";
+import PrivateKeyGeneratorTsx from "../components/keysManagement";
 
 export default function Home() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [twitterUsername, setTwitterUsername] = useState<string | null>(null);
   const [walletAddress, setWalletAddress] = useState("0x1234...5678")
   
+  const [privateKey, setPrivateKey] = useState<string>("");
+
   useEffect(() => {
     const fetchTwitterUsername = async () => {
       if (user?.sub?.startsWith("twitter|")) {
@@ -32,12 +36,16 @@ export default function Home() {
     };
 
     fetchTwitterUsername();
+    const key = PrivateKeyGenerator();
+    console.log("Generated Private Key:", key);
+    setPrivateKey(key);
+  
   }, [user]);
 
   if (isLoading) {
     return <div>Loading ...</div>;
   }
-
+  
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
@@ -103,6 +111,10 @@ export default function Home() {
               <div className="md:col-span-2">
                 <TransactionsTable />
               </div>
+              {/* <PrivateKeyGenerator/> */}
+              <PublicKeyGenerator/>
+
+              <PrivateKeyGeneratorTsx pvtKey={privateKey}/>
             </>
           ) : (
             <div>Please login First</div>
