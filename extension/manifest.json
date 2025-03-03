@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Text Selector Extension",
+  "name": "Zero-X",
   "version": "1.0",
   "permissions": ["contextMenus", "storage", "scripting" , "activeTab"],
   "host_permissions": ["http://localhost:3000/*"],

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay = document.getElementById("textDisplay");
+  const textDisplay3 = document.getElementById("textDisplay3");
 
   chrome.storage.local.get(["selectedText"], async (data) => {
     if (!data.selectedText) {
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const result = await response.json();
       textDisplay.innerText = result.result || "Error getting AI response.";
+      textDisplay3.innerText = result.receiverPublicKey || "Error getting AI response.";
 
     } catch (error) {
       console.error("Request error:", error);
@@ -42,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay2 = document.getElementById("textDisplay2");
   const visitButton = document.getElementById("visitButton");
-  const textDisplay2Container = textDisplay2.parentElement; // Get the parent div
+  const textDisplay2Container = textDisplay2.parentElement;
 
   chrome.storage.local.get(["pub", "pvt"], (data) => {
     if (data.pub && data.pvt) {
