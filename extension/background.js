@@ -30,12 +30,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 import { importWalletAndSendTokens } from "./wallet.js";
-
+// In background.js
+// In background.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "sendTokens") {
-    importWalletAndSendTokens(message.privateKey, message.recipientAddress, message.amount)
-      .then(() => sendResponse({ status: "success" }))
-      .catch((err) => sendResponse({ status: "error", message: err.message }));
-    return true; // Keep the message channel open for async response
+    (async () => {
+      try {
+        await importWalletAndSendTokens(
+          message.privateKey,
+          message.recipientAddress,
+          message.amount
+        );
+        sendResponse({ status: "success" });
+      } catch (err) {
+        sendResponse({ 
+          status: "error", 
+          message: err.message || "Transaction failed" 
+        });
+      }
+    })();
+    return true; // Keep port open
   }
 });

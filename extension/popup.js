@@ -43,35 +43,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle send button click
-  sendButton.addEventListener("click", async () => {
-    const currentData = await chrome.storage.local.get(["pub", "pvt"]);
-    
-    if (!currentData.pub || !currentData.pvt || !resultdata) {
-      textDisplay4.innerText = "Error: Missing keys or data.";
-      return;
-    }
+  // Inside the sendButton click handler:
+// In sendButton click handler
+sendButton.addEventListener("click", async () => {
+  try {
+    textDisplay4.innerText = "Sending...";
+    sendButton.disabled = true;
 
-    const amt = resultdata.result[2];
-    const receiverPublicKey = resultdata.receiverPublicKey;
+    // Force popup to stay open
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    chrome.runtime.sendMessage(
-      {
-        action: "sendTokens",
-        privateKey: currentData.pvt,
-        recipientAddress: receiverPublicKey,
-        amount: amt,
-      },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          textDisplay4.innerText = "Error: " + chrome.runtime.lastError.message;
-          return;
-        }
-        if (response?.status === "success") {
-          textDisplay4.innerText = `Sent ${amt} to ${receiverPublicKey}`;
-        } else {
-          textDisplay4.innerText = `Error: ${response?.message || "Unknown error"}`;
-        }
-      }
-    );
-  });
+    const response = await chrome.runtime.sendMessage({
+      action: "sendTokens",
+      privateKey: (await chrome.storage.local.get("pvt")).pvt,
+      recipientAddress: resultdata.receiverPublicKey,
+      amount: resultdata.result[2]
+    });
+
+    textDisplay4.innerText = response?.status === "success" 
+      ? `Sent ${resultdata.result[2]} tokens` 
+      : `Error: ${response?.message || "Check console"}`;
+
+  } catch (error) {
+    textDisplay4.innerText = `Error: ${error.message}`;
+  } finally {
+    sendButton.disabled = false;
+  }
+});
 });
