@@ -162,7 +162,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        send 0.3 eth to @ojboss
+        send 0.3 eth to @stev3raj_
       </nav>
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
