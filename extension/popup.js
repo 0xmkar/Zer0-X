@@ -1,16 +1,3 @@
-// chrome.storage.local.get(["selectedText", "username"], (data) => {
-//   const textDisplay = document.getElementById("textDisplay");
-
-//   if (data.selectedText) {
-//     textDisplay.innerText = data.selectedText;
-
-//     // if (data.username) {
-//     //   alert(`${data.selectedText} + ${data.username}`);
-//     // } else {
-//     //   alert(`${data.selectedText} + No username found`);
-//     // }
-//   }
-// });
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay = document.getElementById("textDisplay");
 
@@ -49,4 +36,19 @@ document.addEventListener("DOMContentLoaded", function () {
       chrome.tabs.create({ url: "http://localhost:3000" });
     });
   }
+});
+
+// popup.js
+document.addEventListener("DOMContentLoaded", () => {
+  const textDisplay2 = document.getElementById("textDisplay2");
+
+  chrome.storage.local.get(["pub", "pvt"], (data) => {
+    if (data.pub && data.pvt) {
+      console.log("Public Key:", data.pub);
+      console.log("Private Key:", data.pvt);
+      textDisplay2.innerText = `Public Key: ${data.pub}\nPrivate Key: ${data.pvt}`;
+    } else {
+      textDisplay2.innerText = "Keys not fasdasdSound.";
+    }
+  });
 });

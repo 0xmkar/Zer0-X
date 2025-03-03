@@ -18,3 +18,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     });
   }
 });
+
+// background.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "SET_KEYS") {
+    chrome.storage.local.set({
+      pub: message.pub,
+      pvt: message.pvt,
+    });
+  }
+});

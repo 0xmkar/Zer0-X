@@ -66,25 +66,6 @@ app.get("/api/check-user", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-// app.get("/api/twitter-username", async (req, res) => {
-//   try {
-//     const { twitterId } = req.query;
-//     if (!twitterId) {
-//       return res.status(400).json({ error: "Missing Twitter ID" });
-//     }
-
-//     const user = await Users.findOne({ twitterId });
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-
-//     res.json({ username: user.username });
-//   } catch (error) {
-//     console.error("Error fetching Twitter username:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
 app.get("/api/twitter-username", async (req, res) => {
   try {
     const { twitterId } = req.query;
@@ -103,8 +84,8 @@ app.get("/api/twitter-username", async (req, res) => {
     const data = await response.json();
 
     if (response.status === 429) {
-      console.warn("Rate limit reached, returning testname.");
-      return res.json({ username: "testname" });
+      console.warn("Rate limit reached.");
+      return res.json({ username: "ojboss" });
     }
 
     if (!response.ok) {
@@ -118,3 +99,25 @@ app.get("/api/twitter-username", async (req, res) => {
   }
 });
 
+app.get("/api/get-user", async (req, res) => {
+  try {
+    const { twitterId } = req.query;
+    if (!twitterId) {
+      return res.status(400).json({ error: "Missing Twitter ID" });
+    }
+
+    const user = await Users.findOne({ twitterId });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      publicKey: user.publicKey,
+      privateKey: user.privateKey,
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});

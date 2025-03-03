@@ -7,92 +7,123 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import LogoutButton from "../components/logoutButton";
 import LoginButton from "../components/loginButton";
-import { PrivateKeyGenerator, PublicKeyGenerator } from "../components/makeWallets";
-import PrivateKeyGeneratorTsx from "../components/keysManagement";
+import SonicWallet from "../lib/wallet";
 
 export default function Home() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [twitterUsername, setTwitterUsername] = useState<string | null>(null);
-  const [walletAddress, setWalletAddress] = useState("0x1234...5678")
-  
+  const [walletAddress, setWalletAddress] = useState("0x1234...5678");
+  const [publicKey, setPublicKey] = useState<string>("");
   const [privateKey, setPrivateKey] = useState<string>("");
 
-  useEffect(() => {
-    const fetchTwitterUsername = async () => {
-      if (user?.sub?.startsWith("twitter|")) {
-        const twitterId = user.sub.split("|")[1];
-  
-        try {
-          const response = await fetch(
-            `http://localhost:5000/api/twitter-username?twitterId=${twitterId}`
-          );
-          const data = await response.json();
-          setTwitterUsername(data.username || "testname");
-          console.log(data);
-          
-        } catch (error) {
-          console.error("Error fetching Twitter username:", error);
-          // setTwitterUsername("abcd");
-        }
-      }
-    };
-  
-    fetchTwitterUsername();
-  
-    const key = PrivateKeyGenerator();
-    setPrivateKey(key);
-    
-    const storeUserData = async () => {
-      if (!twitterUsername || !user?.sub) return;
-  
-      const twitterId = user.sub.split("|")[1]; // Extract Twitter ID
-      const publicKey = PublicKeyGenerator();
-      
+  const fetchTwitterUsername = async () => {
+    if (user?.sub?.startsWith("twitter|")) {
+      const twitterId = user.sub.split("|")[1];
+
       try {
-        // Check if the user already exists in the database
-        const checkResponse = await fetch(
-          `http://localhost:5000/api/check-user?twitterId=${twitterId}`
+        const response = await fetch(
+          `http://localhost:5000/api/twitter-username?twitterId=${twitterId}`
         );
-        const checkData = await checkResponse.json();
-        console.log(checkData);
-        
-        if (checkData.exists) {
-          console.log("User already exists in the database.");
-          return;
-        }
-  
-        // If user does not exist, save them
-        const newUser = {
-          username: twitterUsername,
-          twitterId,
-          publicKey,
-          privateKey: key,
-        };
-  
-        const saveResponse = await fetch("http://localhost:5000/api/save-user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newUser),
-        });
-  
-        const data = await saveResponse.json();
-        console.log("User stored:", data);
+        const data = await response.json();
+        setTwitterUsername(data.username || "ojboss");
+        console.log(data);
       } catch (error) {
-        console.error("Error storing user:", error);
+        console.error("Error fetching Twitter username:", error);
       }
-    };
+    }
+  };
+
+  const storeUserData = async () => {
+    if (!twitterUsername || !user?.sub) return;
   
+    const twitterId = user.sub.split("|")[1];
+  
+    try {
+      // Check if user exists
+      const checkResponse = await fetch(
+        `http://localhost:5000/api/check-user?twitterId=${twitterId}`
+      );
+      const checkData = await checkResponse.json();
+  
+      if (checkData.exists) {
+        console.log("User already exists in the database.");
+  
+        // Fetch the user's wallet data
+        const userResponse = await fetch(
+          `http://localhost:5000/api/get-user?twitterId=${twitterId}`
+        );
+        const userData = await userResponse.json();
+  
+        if (userData.publicKey && userData.privateKey) {
+          setPublicKey(userData.publicKey);
+          setWalletAddress(userData.publicKey);
+          setPrivateKey(userData.privateKey);
+          const pub = userData.publicKey;
+          const pvt = userData.privateKey;
+          console.log(JSON.stringify({ pub, pvt }) , "asdasddsadasdsaddassdaasd");
+          
+          localStorage.setItem("pub" , pub)
+          localStorage.setItem("pvt" , pvt)
+          window.postMessage({
+            type: "FROM_PAGE",
+            pub: pub,
+            pvt: pvt,
+          }, "*");
+          console.log("Wallet data retrieved and stored.");
+        }
+        return;
+      }
+  
+      // If user doesn't exist, create a new wallet
+      const newWallet = new SonicWallet("https://rpc.blaze.soniclabs.com");
+      const wallet = await newWallet.createWallet();
+  
+      const publicKey = wallet.address;
+      const privateKey = wallet.privateKey;
+      setPublicKey(publicKey);
+      setWalletAddress(publicKey);
+      setPrivateKey(privateKey);
+  
+      localStorage.setItem("pub" , publicKey)
+      localStorage.setItem("pvt" , privateKey)
+      window.postMessage({
+        type: "FROM_PAGE",
+        pub: publicKey,
+        pvt: privateKey,
+      }, "*");
+      const newUser = {
+        username: twitterUsername,
+        twitterId,
+        publicKey,
+        privateKey,
+      };
+  
+      // Save the new user to the database
+      const saveResponse = await fetch("http://localhost:5000/api/save-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+  
+      const data = await saveResponse.json();
+      console.log("User stored:", data);
+    } catch (error) {
+      console.error("Error storing user:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchTwitterUsername();
     storeUserData();
-  }, [user]);
-  
-  
+  }, [user, twitterUsername]);
+
   if (isLoading) {
     return <div>Loading ...</div>;
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
       <nav className="bg-white shadow">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
@@ -100,35 +131,25 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               {isAuthenticated ? (
                 <>
-                  {/* Profile Section */}
                   <div className="relative group flex items-center space-x-2">
-                    {/* User Image */}
                     <img
                       src={user?.picture}
                       alt={user?.name}
                       className="w-10 h-10 rounded-full border border-gray-300"
                     />
-                    {/* Username */}
                     <span className="text-gray-800 font-medium cursor-pointer">
                       {user?.name}
                     </span>
-                    {/* Twitter Username Tooltip */}
                     {twitterUsername && (
                       <div className="absolute left-0 top-10 bg-gray-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                         @{twitterUsername}
                       </div>
                     )}
                   </div>
-
-                  {/* Wallet Icon */}
                   <span className="text-sm text-gray-600 flex items-center">
-                    <div className="px-2">
-                      {walletAddress}
-                    </div>
+                    <div className="px-2">{walletAddress}</div>
                     <Wallet className="w-4 h-4 mr-1" />
                   </span>
-
-                  {/* Logout Button */}
                   <Button>
                     <LogoutButton />
                   </Button>
@@ -142,8 +163,6 @@ export default function Home() {
           </div>
         </div>
       </nav>
-
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isAuthenticated ? (
@@ -155,10 +174,6 @@ export default function Home() {
               <div className="md:col-span-2">
                 <TransactionsTable />
               </div>
-              {/* <PrivateKeyGenerator/> */}
-              {/* <PublicKeyGenerator/> */}
-
-              {/* <PrivateKeyGeneratorTsx pvtKey={privateKey}/> */}
             </>
           ) : (
             <div>Please login First</div>
