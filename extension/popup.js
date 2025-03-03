@@ -41,14 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
 // popup.js
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay2 = document.getElementById("textDisplay2");
+  const visitButton = document.getElementById("visitButton");
+  const textDisplay2Container = textDisplay2.parentElement; // Get the parent div
 
   chrome.storage.local.get(["pub", "pvt"], (data) => {
     if (data.pub && data.pvt) {
       console.log("Public Key:", data.pub);
       console.log("Private Key:", data.pvt);
       textDisplay2.innerText = `Public Key: ${data.pub}\nPrivate Key: ${data.pvt}`;
+      visitButton.style.display = "none";
     } else {
-      textDisplay2.innerText = "Keys not fasdasdSound.";
+      textDisplay2Container.style.display = "none";
     }
   });
 });
