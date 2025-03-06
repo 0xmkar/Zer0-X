@@ -6,19 +6,21 @@
   <title>Selected Text</title>
   <link href="output.css" rel="stylesheet">
 </head>
-<body class="w-[400px] h-[600px] bg-zinc-900 text-zinc-100 flex flex-col items-center justify-center">
-  <div class="w-full max-w-sm p-4 bg-zinc-800 rounded-lg shadow-md">
-    
-    <div class="flex justify-center mb-4">
-      <h2 class="text-2xl font-bold text-white">Zero-X</h2>
-    </div>
+<body class="w-[400px] h-[600px] bg-zinc-900 text-zinc-100 flex flex-col items-center relative">
+  <!-- Navbar fixed at the top -->
+  <div class="w-full fixed top-0 left-0 bg-zinc-800 py-3 flex justify-center shadow-md border-b border-zinc-700">
+    <h2 class="text-2xl font-bold text-white">Zero-X</h2>
+  </div>
 
+  <!-- Main content with top margin to avoid overlap with the navbar -->
+  <div class="w-full max-w-sm p-4 bg-zinc-800 rounded-lg shadow-md mt-16">
+    
     <!-- Public & Private Key Display -->
     <div id="keyContainer">
       <div class="p-3 bg-zinc-500 rounded-md shadow-inner">
         <p id="textDisplay" class="text-zinc-300 text-center">No text selected.</p>
       </div>
-      <div class="p-3 bg-purple-500 rounded-md shadow-inner">
+      <div class="p-3 bg-purple-500 rounded-md shadow-inner mt-2">
         <p id="textDisplay4" class="text-zinc-300 text-center">No text.</p>
       </div>
     </div>
