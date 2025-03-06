@@ -27,7 +27,7 @@ Zero-X is an LLM-based AI Agent that facilitates Web3 transactions using Twitter
 
 1. **Clone the repository:**
 
-   git clone https://github.com/yourusername/zero-x.git  
+   git clone https://github.com/Shivraj-Kore/Zero-X.git
    cd zero-x
 
 2. **Load the extension in your browser:**
