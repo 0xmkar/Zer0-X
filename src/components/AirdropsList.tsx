@@ -7,6 +7,11 @@ interface TokenDetails {
   symbol: string;
 }
 
+interface TaskDetails {
+  taskId: string;
+  taskName: string;
+}
+
 interface Airdrop {
   websiteUrl: string | undefined;
   airdropId: string;
@@ -17,6 +22,7 @@ interface Airdrop {
   totalAirdropAmount: number;
   token: TokenDetails;
   people: { twitterId: string }[]; // Store joined users
+  tasks: TaskDetails[];
 }
 
 export default function AirdropsList() {
@@ -38,7 +44,6 @@ export default function AirdropsList() {
       const data = await response.json();
       if (response.ok) {
         alert("Successfully joined the airdrop!");
-        // Update state to reflect joined status
         setAirdrops((prevAirdrops) =>
           prevAirdrops.map((a) =>
             a.airdropId === airdropId
@@ -60,9 +65,6 @@ export default function AirdropsList() {
       try {
         const response = await fetch("http://localhost:5000/api/show-airdrops");
         const data = await response.json();
-        console.log(data);
-        console.log(data.airdrops , "--------");
-        
         setAirdrops(data.airdrops);
       } catch (error) {
         console.error("Error fetching airdrops:", error);
@@ -78,8 +80,7 @@ export default function AirdropsList() {
   if (!isAuthenticated) return <p>Please log in to view airdrops.</p>;
 
   return (
-    <>
-          <div className="bg-white p-6 shadow-lg rounded-xl">
+    <div className="bg-white p-6 shadow-lg rounded-xl">
       <h2 className="text-2xl font-bold mb-6">Available Airdrops</h2>
       {airdrops.length === 0 ? (
         <p className="text-gray-500">No airdrops available</p>
@@ -87,11 +88,13 @@ export default function AirdropsList() {
         <ul className="space-y-6">
           {airdrops.map((airdrop, index) => {
             const hasJoined = airdrop.people.some((p) => p.twitterId === twitterId);
+            const isEnded = new Date(airdrop.airdropEndDate) < new Date();
 
             return (
               <li key={index} className="border p-5 rounded-xl shadow-md">
                 <h3 className="text-lg font-semibold mb-2">{airdrop.airdropName}</h3>
                 <p className="text-sm text-gray-600 mb-3">{airdrop.description}</p>
+                <hr className="mb-2" />
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="bg-gray-100 p-3 rounded-lg">
@@ -115,6 +118,17 @@ export default function AirdropsList() {
                   </div>
                 </div>
 
+                {airdrop.tasks.length > 0 && (
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <p className="font-medium">Tasks To Do:</p>
+                    <ul className="text-sm pl-5">
+                      {airdrop.tasks.map((task, i) => (
+                        <li key={i}> - {task.taskName}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center">
                   <a
                     href={airdrop.websiteUrl}
@@ -125,15 +139,17 @@ export default function AirdropsList() {
                     Visit Website
                   </a>
 
-                  {!hasJoined ? (
+                  {isEnded ? (
+                    <p className="text-red-600">Ended ❌</p>
+                  ) : hasJoined ? (
+                    <p className="text-green-600">You have already joined this airdrop ✅</p>
+                  ) : (
                     <button
                       onClick={() => joinAirdrop(airdrop.airdropId)}
                       className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                     >
                       Join Airdrop
                     </button>
-                  ) : (
-                    <p className="text-green-600">You have already joined this airdrop ✅</p>
                   )}
                 </div>
               </li>
@@ -142,6 +158,5 @@ export default function AirdropsList() {
         </ul>
       )}
     </div>
-    </>
   );
-}
+} 
