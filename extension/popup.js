@@ -2,10 +2,7 @@ let resultdata = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay = document.getElementById("textDisplay");
-  const textDisplay2 = document.getElementById("textDisplay2");
-  const textDisplay3 = document.getElementById("textDisplay3");
   const textDisplay4 = document.getElementById("textDisplay4");
-  const textDisplay5 = document.getElementById("textDisplay5");
   const sendButton = document.getElementById("sendButton");
 
   chrome.storage.local.get(["selectedText", "pub", "pvt"], async (data) => {
@@ -27,9 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
       resultdata = result;
 
       textDisplay.innerText = result.finalresponse || "Error getting AI response.";
-      textDisplay2.innerText = data.pub || "Error getting pub key.";
-      textDisplay3.innerText = data.pvt || "Error getting private key.";
-      textDisplay5.innerText = result.receiverPublicKey || "Error getting pub key.";
 
       // Enable send button if data is available
       if (data.pub && data.pvt && resultdata) {
@@ -46,32 +40,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Handle send button click
-  // Inside the sendButton click handler:
-// In sendButton click handler
-sendButton.addEventListener("click", async () => {
-  try {
-    textDisplay4.innerText = "Sending...";
-    sendButton.disabled = true;
+  // In sendButton click handler
+  sendButton.addEventListener("click", async () => {
+    try {
+      textDisplay4.innerText = "Sending...";
+      sendButton.disabled = true;
+  
+      // Force popup to stay open
+      await new Promise(resolve => setTimeout(resolve, 3000));
+  
+      let responseData;
 
-    // Force popup to stay open
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    const response = await chrome.runtime.sendMessage({
-      action: "sendTokens",
-      privateKey: (await chrome.storage.local.get("pvt")).pvt,
-      recipientAddress: resultdata.receiverPublicKey,
-      amount: resultdata.result[2]
-    });
-
-    textDisplay4.innerText = response?.status === "success" 
-      ? `Sent ${resultdata.result[2]} tokens` 
-      : `Error: ${response?.message || "Check aaaaaa error"}`;
-
-  } catch (error) {
-    textDisplay4.innerText = `Error: ${error.message}`;
-  } finally {
-    sendButton.disabled = false;
-  }
+      try {
+        const response = await fetch('http://localhost:5000/import-wallet', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            privateKey: (await chrome.storage.local.get("pvt")).pvt,
+            recipientAddress: resultdata.receiverPublicKey,
+            amount: resultdata.finalresponse[2]
+          })
+        });
+        console.log(response)
+  
+        if (!response.ok) {
+          console.log(response)
+          return;
+        }
+  
+        responseData = await response.json();
+        console.log(responseData)
+        textDisplay4.innerText = `Response2 from /import-wallet: ${JSON.stringify(responseData)}`;
+      } catch (error) {
+        //Error calling /import-wallet: TypeError: Cannot read properties of undefined (reading '2')
+        responseData = { message: error.message };
+      }
+  
+      textDisplay4.innerText = responseData?.status === "success" 
+        ? `Sent ${resultdata.finalresponse[2]} tokens` 
+        : `lavda Error: ${JSON.stringify(responseData) || "Check console"}`;
+    
+    } catch (error) {
+      textDisplay4.innerText = `sexy Error: ${error.message}`;
+    } finally {
+      sendButton.disabled = false;
+    }
+  }); 
 });
-});
+// Cannot read properties of undefined (reading '2')
