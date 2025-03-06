@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const amount = result.finalresponse[2]; 
       const recipient = result.finalresponse[3];
 
-      textDisplay.innerText = `${command}ing ${amount} ${token} to ${recipient}` || "Error getting AI response.";
+      textDisplay.innerText = `${command}ing ${amount} ${token.toUpperCase()} to ${recipient}` || "Error getting AI response.";
 
       // Enable send button if data is available
       if (data.pub && data.pvt && resultdata) {
