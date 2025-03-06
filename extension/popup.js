@@ -62,7 +62,7 @@ sendButton.addEventListener("click", async () => {
 
     textDisplay4.innerText = response?.status === "success" 
       ? `Sent ${resultdata.result[2]} tokens` 
-      : `Error: ${response?.message || "Check console"}`;
+      : `Error: ${response?.message || "Check aaaaaa error"}`;
 
   } catch (error) {
     textDisplay4.innerText = `Error: ${error.message}`;
