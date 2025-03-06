@@ -8,6 +8,7 @@ import { Button } from "../components/ui/button";
 import LogoutButton from "../components/logoutButton";
 import LoginButton from "../components/loginButton";
 import SonicWallet from "../lib/wallet";
+import AirdropParticipants from "./AirdropParticipants";
 
 export default function Home() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -173,6 +174,7 @@ export default function Home() {
               </div>
               <div className="md:col-span-2">
                 <TransactionsTable />
+                <AirdropParticipants />
               </div>
             </>
           ) : (

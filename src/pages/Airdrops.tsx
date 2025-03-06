@@ -386,7 +386,7 @@ export default function CreateAirdropForm() {
                     name="token.symbol"
                     value={formData.token.symbol}
                     onChange={handleChange}
-                    placeholder="e.g., ETH"
+                    placeholder="e.g., ETN"
                     required
                   />
                 </div>

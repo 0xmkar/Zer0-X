@@ -11,12 +11,12 @@ export default function WalletInfo() {
         <div>
           <p className="text-sm text-gray-600">Balance:</p>
           <hr />
-          <p className="text-lg font-semibold">1,234.56 ETH</p>
+          <p className="text-lg font-semibold">9.223139 ETN</p>
         </div>
         <div>
           <p className="text-sm text-gray-600">USD Value:</p>
           <hr />
-          <p className="text-lg font-semibold">$2,345,678.90</p>
+          <p className="text-lg font-semibold">$ 0.0</p>
         </div>
         <a href="/airdrops">
         <h2 className="bg-blue-300 flex items-center justify-center p-4 rounded text-lg font-semibold">

@@ -2,10 +2,10 @@ import { ArrowUpRight, ArrowDownLeft } from "lucide-react"
 
 export default function TransactionsTable() {
   const transactions = [
-    { id: 1, type: "send", amount: "10 ETH", to: "0x1234...5678", date: "2023-04-01" },
-    { id: 2, type: "receive", amount: "5 ETH", from: "0x8765...4321", date: "2023-03-30" },
-    { id: 3, type: "send", amount: "2 ETH", to: "0x2468...1357", date: "2023-03-28" },
-    { id: 4, type: "receive", amount: "15 ETH", from: "0x1357...2468", date: "2023-03-25" },
+    { id: 1, type: "send", amount: "0.002 ETN", to: "0x1234...5678", date: "2025-03-06" },
+    { id: 2, type: "send", amount: "0.001 ETN", from: "0x8765...4321", date: "2025-03-06" },
+    { id: 3, type: "send", amount: "0.004 ETN", to: "0x2468...1357", date: "2025-03-05" },
+    { id: 4, type: "send", amount: "0.0069 ETN", from: "0x1357...2468", date: "2025-03-05" },
   ]
 
   return (
