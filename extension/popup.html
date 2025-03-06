@@ -8,15 +8,8 @@
 </head>
 <body class="w-[400px] h-[600px] bg-zinc-900 text-zinc-100 flex flex-col items-center relative">
   <!-- Navbar -->
-  <div class="w-full fixed top-0 left-0 bg-zinc-800 py-3 flex justify-between items-center px-4 shadow-md border-b border-zinc-700">
+  <div class="w-full fixed top-0 left-0 bg-zinc-800 py-3 flex justify-center items-center px-4 shadow-md border-b border-zinc-700">
     <h2 class="text-xl font-bold text-white">Zero-X</h2>
-    <!-- Chain Selector -->
-    <select class="bg-zinc-700 text-white text-sm px-2 py-1 rounded-md">
-      <option>Ethereum</option>
-      <option>Polygon</option>
-      <option>Binance Smart Chain</option>
-      <option>Avalanche</option>
-    </select>
   </div>
 
   <!-- Main content -->
@@ -24,40 +17,25 @@
     <!-- Wallet Balance -->
     <div class="text-center">
       <h1 class="text-lg font-semibold">Wallet Balance (USD):</h1>
-      <h1 class="text-2xl font-bold">10 USD</h1>
-    </div>
-    
-    <!-- Buttons: Send, Buy, Swap -->
-    <div class="flex justify-between w-full mt-4">
-      <button class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md flex-1 mx-1">Send</button>
-      <button class="bg-green-600 hover:bg-green-500 text-white font-medium py-2 px-4 rounded-md flex-1 mx-1">Buy</button>
-      <button class="bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 px-4 rounded-md flex-1 mx-1">Swap</button>
+      <h1 class="text-2xl font-bold">0.02 USD</h1>
     </div>
 
     <!-- Public & Private Key Display -->
     <div id="keyContainer" class="w-full mt-4">
       <div class="p-3 bg-[#00B7F8] rounded-md shadow-inner">
-        <p id="textDisplay" class="text-zinc-300 text-center">No text selected.</p>
+        <p id="textDisplay" class="text-black text-bold text-[20px] text-center">No text selected.</p>
       </div>
-      <div class="p-3 bg-purple-500 rounded-md shadow-inner mt-2">
-        <p id="textDisplay4" class="text-zinc-300 text-center">No text.</p>
+      <div id="ready_container" class="p-3 bg-purple-500 rounded-md shadow-inner mt-2 text-black text-bold text-[15px] text-center">
+        <p id="textDisplay4" class="text-zinc-300 text-center">Not ready.</p>
       </div>
     </div>
 
     <!-- Tokens List -->
     <div class="w-full mt-4">
-      <h2 class="text-lg font-semibold mb-2">Tokens</h2>
+      <h2 class="text-lg font-semibold mb-2">Token :</h2>
       <div class="flex justify-between items-center bg-zinc-700 p-3 rounded-md mb-2">
-        <span>ETH</span>
-        <span>0.5</span>
-      </div>
-      <div class="flex justify-between items-center bg-zinc-700 p-3 rounded-md mb-2">
-        <span>USDT</span>
-        <span>20</span>
-      </div>
-      <div class="flex justify-between items-center bg-zinc-700 p-3 rounded-md">
-        <span>BNB</span>
-        <span>1.2</span>
+        <span>ETN</span>
+        <span>9.223139</span>
       </div>
     </div>
 

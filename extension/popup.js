@@ -3,6 +3,7 @@ let resultdata = null;
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay = document.getElementById("textDisplay");
   const textDisplay4 = document.getElementById("textDisplay4");
+  const ready_container = document.getElementById("ready_container");
   const sendButton = document.getElementById("sendButton");
 
   chrome.storage.local.get(["selectedText", "pub", "pvt"], async (data) => {
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       resultdata = result;
 
-      const command = result.finalresponse[0];
+      const command = result.finalresponse[0].charAt(0).toUpperCase() + result.finalresponse[0].slice(1);
       const token = result.finalresponse[1];
       const amount = result.finalresponse[2]; 
       const recipient = result.finalresponse[3];
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendButton.disabled = false;
         sendButton.classList.remove("opacity-50");
         textDisplay4.innerText = "Ready to send tokens.";
+        ready_container.style = "background:#00B7F8";
       } else {
         textDisplay4.innerText = "Error: Missing data or keys.";
       }
