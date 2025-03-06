@@ -1,12 +1,12 @@
-import SonicWallet from "./sonicWallet.mjs";
+import ElectroneumWallet from "./electroneumWallet.mjs";
 
-const sonicWallet = new SonicWallet('https://rpc.blaze.soniclabs.com');
+const electroneumWallet = new ElectroneumWallet('https://rpc.ankr.com/electroneum_testnet');
 
 // In wallet.js
 export async function importWalletAndSendTokens(privateKey, recipientAddress, amount) {
     try {
-      const walletInfo = await sonicWallet.createWallet(privateKey);
-      const balance = await sonicWallet.getBalance(walletInfo.address);
+      const walletInfo = await electroneumWallet.createWallet(privateKey);
+      const balance = await electroneumWallet.getBalance(walletInfo.address);
   
       if (parseFloat(balance) <= 0) {
         throw new Error("Insufficient balance to send tokens");
@@ -16,7 +16,7 @@ export async function importWalletAndSendTokens(privateKey, recipientAddress, am
       return { status: 'success', details: { privateKey, recipientAddress, amount, tnxHash } };
     } catch (error) {
       console.error("Error:", error.message);
-      return { status: 'Failure', details: { privateKey, recipientAddress, amount } };
+      return { status: 'Failure', details: { privateKey, recipientAddress, amount, Error:error.message } };
       // throw error;   // Re-throw to ensure the promise rejects
     }
   }
@@ -26,7 +26,7 @@ export async function importWalletAndSendTokens(privateKey, recipientAddress, am
 export async function sendTokens(recipientAddress, amount) {
   try {
     // Validate the recipient address
-    if (!sonicWallet.isValidSonicAddress(recipientAddress)) {
+    if (!electroneumWallet.isValidElectroneumAddress(recipientAddress)) {
       throw new Error("Invalid recipient address format");
     }
     
@@ -38,7 +38,7 @@ export async function sendTokens(recipientAddress, amount) {
     };
     
     // Send the transaction
-    const receipt = await sonicWallet.sendTransaction(recipientAddress, amount, options);
+    const receipt = await electroneumWallet.sendTransaction(recipientAddress, amount, options);
     
     console.log("📄 Transaction sent successfully! 📄 ");
     console.log(`Transaction hash: ${receipt.transactionHash}`);
