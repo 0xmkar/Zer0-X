@@ -1,4 +1,4 @@
-import SonicWallet from "./sonicWallet.js";
+import SonicWallet from "./sonicWallet.mjs";
 
 const sonicWallet = new SonicWallet('https://rpc.blaze.soniclabs.com');
 

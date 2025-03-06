@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === "sendTokens") {
     try {
-      const { importWalletAndSendTokens } = await import("./wallet.js");
+      const { importWalletAndSendTokens } = await import("./wallet.mjs");
       await importWalletAndSendTokens(
         message.privateKey,
         message.recipientAddress,

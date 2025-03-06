@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import Users from "../models/User.js"; 
-import { importWalletAndSendTokens } from '../extension/wallet.js'
+import Airdrop from "../models/Airdrops.js"; 
+import { importWalletAndSendTokens } from '../extension/wallet.mjs'
 
 
 dotenv.config({ path: "../.env" });
@@ -15,8 +16,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: "*" }));
 
 app.use(express.json()); // To parse incoming JSON data
-
-const mongouri = process.env.MONGO_URI;
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -137,5 +136,97 @@ app.post('/import-wallet', async (req, res) => {
   } catch (error) {
     console.error('Error in importWalletAndSendTokens:', error);
     res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+app.post("/api/save-airdrop", async (req, res) => {
+  try {
+    const {
+      airdropId,
+      airdropName,
+      description,
+      websiteUrl,
+      totalAirdropAmount,
+      tokensPerUser,
+      distributionMethod,
+      eligibilityCriteria,
+      airdropStartDate,
+      airdropEndDate,
+      distributionDate,
+      claimDeadline,
+      token,
+      tasks
+    } = req.body;
+
+    // Check if airdrop already exists
+    let existingAirdrop = await Airdrop.findOne({ airdropId });
+    if (existingAirdrop) {
+      return res.status(400).json({ message: "Airdrop already exists" });
+    }
+
+    // Create and save airdrop
+    const newAirdrop = new Airdrop({
+      airdropId,
+      airdropName,
+      description,
+      websiteUrl,
+      totalAirdropAmount,
+      tokensPerUser,
+      distributionMethod,
+      eligibilityCriteria,
+      airdropStartDate,
+      airdropEndDate,
+      distributionDate,
+      claimDeadline,
+      token,
+      tasks
+    });
+
+    await newAirdrop.save();
+    res.status(201).json({ message: "Airdrop stored successfully", newAirdrop });
+  } catch (error) {
+    console.error("Error saving airdrop:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/api/show-airdrops", async (req, res) => {
+  try {
+    const airdrops = await Airdrop.find();
+    res.status(200).json({ airdrops });
+  } catch (error) {
+    console.error("Error fetching airdrops:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/api/join-airdrop", async (req, res) => {
+  try {
+    const { airdropId, twitterId, walletAddress } = req.body;
+
+    if (!airdropId || !twitterId || !walletAddress) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const airdrop = await Airdrop.findOne({ airdropId });
+
+    if (!airdrop) {
+      return res.status(404).json({ message: "Airdrop not found" });
+    }
+
+    // Check if user already joined
+    const alreadyJoined = airdrop.people.some((p) => p.twitterId === twitterId);
+    if (alreadyJoined) {
+      return res.status(400).json({ message: "User already joined this airdrop" });
+    }
+
+    // Add user to airdrop
+    airdrop.people.push({ twitterId, walletAddress });
+    await airdrop.save();
+
+    res.status(200).json({ message: "Joined airdrop successfully", airdrop });
+  } catch (error) {
+    console.error("Error joining airdrop:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });

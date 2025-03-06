@@ -1,9 +1,18 @@
 import Home from "./pages/HomePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Airdrops from "./pages/Airdrops";
 
 function App() {
   return (
     <>
-      <Home/>
+      <BrowserRouter>
+      <Routes>
+        <Route>
+          <Route index element={<Home />} />
+          <Route path="airdrops" element={<Airdrops />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
     </>
   );
 }
