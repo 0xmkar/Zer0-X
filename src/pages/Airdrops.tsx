@@ -430,6 +430,7 @@ export default function CreateAirdropForm() {
                       <SelectValue placeholder="Select blockchain" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="electroneum">Electroneum</SelectItem>
                       <SelectItem value="ethereum">Ethereum</SelectItem>
                       <SelectItem value="binance">Binance Smart Chain</SelectItem>
                       <SelectItem value="polygon">Polygon</SelectItem>
