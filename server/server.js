@@ -85,7 +85,7 @@ app.get("/api/twitter-username", async (req, res) => {
 
     if (response.status === 429) {
       console.warn("Rate limit reached.");
-      return res.json({ username: "ojboss" });
+      return res.json({ username: "stev3raj_" });
     }
 
     if (!response.ok) {

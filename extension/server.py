@@ -76,7 +76,7 @@ def analyze_text():
         else:
             public_key = None  # Twitter ID not found in the database
 
-        return jsonify({"result": finalresponse, "receiverPublicKey": public_key})
+        return jsonify({"finalresponse": finalresponse, "receiverPublicKey": public_key})
 
     except Exception as e:
         print(f"Error: {str(e)}")

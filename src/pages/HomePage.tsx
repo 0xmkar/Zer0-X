@@ -25,7 +25,7 @@ export default function Home() {
           `http://localhost:5000/api/twitter-username?twitterId=${twitterId}`
         );
         const data = await response.json();
-        setTwitterUsername(data.username || "ojboss");
+        setTwitterUsername(data.username || "stev3raj_");
         console.log(data);
       } catch (error) {
         console.error("Error fetching Twitter username:", error);

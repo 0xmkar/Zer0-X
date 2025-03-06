@@ -2,8 +2,10 @@ let resultdata = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const textDisplay = document.getElementById("textDisplay");
+  const textDisplay2 = document.getElementById("textDisplay2");
   const textDisplay3 = document.getElementById("textDisplay3");
   const textDisplay4 = document.getElementById("textDisplay4");
+  const textDisplay5 = document.getElementById("textDisplay5");
   const sendButton = document.getElementById("sendButton");
 
   chrome.storage.local.get(["selectedText", "pub", "pvt"], async (data) => {
@@ -24,8 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       resultdata = result;
 
-      textDisplay.innerText = result.result || "Error getting AI response.";
+      textDisplay.innerText = result.finalresponse || "Error getting AI response.";
+      textDisplay2.innerText = data.pub || "Error getting pub key.";
       textDisplay3.innerText = data.pvt || "Error getting private key.";
+      textDisplay5.innerText = result.receiverPublicKey || "Error getting pub key.";
 
       // Enable send button if data is available
       if (data.pub && data.pvt && resultdata) {
