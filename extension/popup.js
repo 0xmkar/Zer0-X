@@ -74,12 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
           // console.log(response)
           return;
         }
-  
+
         responseData = await response.json();
-        
         // textDisplay4.innerText = `Response2 from /import-wallet: ${JSON.stringify(responseData)}`;
       } catch (error) {
-        //Error calling /import-wallet: TypeError: Cannot read properties of undefined (reading '2')
         responseData = { message: error.message };
       }
   
