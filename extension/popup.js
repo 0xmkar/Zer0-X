@@ -23,7 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       resultdata = result;
 
-      textDisplay.innerText = result.finalresponse || "Error getting AI response.";
+      const command = result.finalresponse[0];
+      const token = result.finalresponse[1];
+      const amount = result.finalresponse[2]; 
+      const recipient = result.finalresponse[3];
+
+      textDisplay.innerText = `${command}ing ${amount} ${token} to ${recipient}` || "Error getting AI response.";
 
       // Enable send button if data is available
       if (data.pub && data.pvt && resultdata) {
@@ -66,20 +71,20 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(response)
   
         if (!response.ok) {
-          console.log(response)
+          // console.log(response)
           return;
         }
   
         responseData = await response.json();
-        console.log(responseData)
-        textDisplay4.innerText = `Response2 from /import-wallet: ${JSON.stringify(responseData)}`;
+        
+        // textDisplay4.innerText = `Response2 from /import-wallet: ${JSON.stringify(responseData)}`;
       } catch (error) {
         //Error calling /import-wallet: TypeError: Cannot read properties of undefined (reading '2')
         responseData = { message: error.message };
       }
   
       textDisplay4.innerText = responseData?.status === "success" 
-        ? `Sent ${resultdata.finalresponse[2]} tokens` 
+        ? `Sent ${resultdata.finalresponse[2]} tokens\n Tnx Hash - ${responseData.details.tnxHash}`
         : `lavda Error: ${JSON.stringify(responseData) || "Check console"}`;
     
     } catch (error) {

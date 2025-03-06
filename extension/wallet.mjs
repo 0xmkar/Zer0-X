@@ -12,8 +12,8 @@ export async function importWalletAndSendTokens(privateKey, recipientAddress, am
         throw new Error("Insufficient balance to send tokens");
       }
 
-      await sendTokens(recipientAddress, amount);
-      return { status: 'success', details: { privateKey, recipientAddress, amount } };
+      const tnxHash = await sendTokens(recipientAddress, amount);
+      return { status: 'success', details: { privateKey, recipientAddress, amount, tnxHash } };
     } catch (error) {
       console.error("Error:", error.message);
       return { status: 'Failure', details: { privateKey, recipientAddress, amount } };
@@ -45,6 +45,8 @@ export async function sendTokens(recipientAddress, amount) {
     console.log(`Block number: ${receipt.blockNumber}`);
     console.log(`Gas used: ${receipt.gasUsed}`);
     console.log("📄 Transaction sent successfully! 📄 ");
+
+    return receipt.transactionHash
 } catch (error) {
     console.error("Error sending tokens:", error.message);
   }
