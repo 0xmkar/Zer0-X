@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import Users from "../models/User.js"; 
+import { importWalletAndSendTokens } from '../extension/wallet.js'
 
 
 dotenv.config({ path: "../.env" });
@@ -119,5 +120,22 @@ app.get("/api/get-user", async (req, res) => {
   } catch (error) {
     console.error("Error fetching user data:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post('/import-wallet', async (req, res) => {
+  const { privateKey, recipientAddress, amount } = req.body;
+
+  // Validate required parameters.
+  if (privateKey === undefined || recipientAddress === undefined || amount === undefined) {
+    return res.status(400).json({ error: 'Missing required parameters.' });
+  }
+
+  try {
+    const result = await importWalletAndSendTokens(privateKey, recipientAddress, amount);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error in importWalletAndSendTokens:', error);
+    res.status(500).json({ error: 'Internal server error.' });
   }
 });
