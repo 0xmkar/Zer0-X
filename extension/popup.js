@@ -94,4 +94,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }); 
 });
-// Cannot read properties of undefined (reading '2')

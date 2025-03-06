@@ -1,50 +1,67 @@
-# React + TypeScript + Vite
+# Zero-X
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Zero-X is an LLM-based AI Agent that facilitates Web3 transactions using Twitter usernames instead of wallet addresses. It enables seamless and user-friendly interactions with blockchain functionalities directly from Twitter.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **AI-Powered Web3 Transactions**  
+  Use an LLM-based AI Agent (powered by Groq) to send and receive crypto transactions, bypassing traditional wallet addresses by leveraging Twitter usernames.
 
-## Expanding the ESLint configuration
+- **Airdrop Functionality**  
+  Create and join airdrops on the Electroneum chain, allowing users to distribute or receive tokens in a community-driven manner.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Multiple Interfaces**
+  - **Browser Extension**: Send transactions directly from Twitter.
+  - **Website**: Log in with Twitter to map your wallet to your Twitter account and manage transactions.
 
-- Configure the top-level `parserOptions` property like this:
+## Tech Stack
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **AI & LLM**: Groq
+- **Blockchain**: Electroneum Chain
+- **Web3 Integration**: Wallet mapping and transaction handling
+- **Frontend**: Browser extension & web application
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Installation
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Browser Extension
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. **Clone the repository:**
+
+   git clone https://github.com/yourusername/zero-x.git  
+   cd zero-x
+
+2. **Load the extension in your browser:**
+
+   - Open your browser and navigate to `chrome://extensions/` (for Chrome) or the equivalent for your browser.
+   - Enable **Developer Mode**.
+   - Click **Load Unpacked** and select the `extension` folder.
+
+### Website
+
+1. **Navigate to the website directory:**
+
+   cd website
+
+2. **Install dependencies:**
+
+   npm install
+
+3. **Run the development server:**
+
+   npm run dev
+
+## Usage
+
+- **For the Browser Extension:**  
+  Install the extension and connect your wallet. Use the Twitter-integrated interface to send and receive funds effortlessly.
+
+- **For the Website:**  
+  Log in using your Twitter account to map your wallet, manage transactions, and participate in airdrops.
+
+## Contributing
+
+Contributions are welcome! If you have any bug fixes, improvements, or new features to propose, please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
