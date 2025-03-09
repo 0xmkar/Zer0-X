@@ -31,7 +31,7 @@ Zero-X is an LLM-based AI Agent built on the Sonic chain, designed to revolution
 1. **Clone the repository:**
 
 ```
- git clone https://github.com/Shivraj-Kore/Zero-X.git
+ git clone git@github.com:0xmkar/Zer0-X.git
  cd zero-x
 ```
 
