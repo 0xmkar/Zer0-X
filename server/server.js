@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import Users from "../models/User.js"; 
 import Airdrop from "../models/Airdrops.js"; 
-import { importWalletAndSendTokens } from '../extension/wallet.mjs'
+import { importWalletAndSendTokens, getBalanceWallet } from '../extension/wallet.mjs'
 
 
 dotenv.config({ path: "../.env" });
@@ -135,6 +135,24 @@ app.post('/import-wallet', async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     console.error('Error in importWalletAndSendTokens:', error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+app.post('/getBalance', async (req, res) => {
+  const { privateKey } = req.body;
+
+  // Validate required parameters
+  if (privateKey === undefined) {
+    return res.status(400).json({ error: 'Missing required parameter: privateKey' });
+  }
+
+  try {
+    const result = await getBalanceWallet(privateKey);
+    console.log(result)
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error in getBalanceWallet:', error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });

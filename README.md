@@ -1,17 +1,17 @@
 # Zero-X
 
-Zero-X is an LLM-based AI Agent built on the Electroneum chain, designed to revolutionize Web3 transactions by replacing complex wallet addresses with familiar Twitter usernames. It offers all the basic functionalities of a modern crypto wallet - such as sending funds, checking balances, and more - while leveraging the secure and efficient Electroneum blockchain.
+Zero-X is an LLM-based AI Agent built on the Sonic chain, designed to revolutionize Web3 transactions by replacing complex wallet addresses with familiar Twitter usernames. It offers all the basic functionalities of a modern crypto wallet - such as sending funds, checking balances, and more - while leveraging the secure and efficient Sonic blockchain.
 
 ## Features
 
-- **Electroneum Chain Integration**  
-  Fully harness the native power of the Electroneum chain for secure, fast, and decentralized transactions.
+- **Sonic Chain Integration**  
+  Fully harness the native power of the Sonic chain for secure, fast, and decentralized transactions.
 
 - **AI-Powered Web3 Transactions**  
   Use an LLM-based AI Agent (powered by Groq) to send and receive crypto transactions, bypassing traditional wallet addresses by leveraging Twitter usernames.
 
 - **Airdrop Functionality**  
-  Create and join airdrops on the Electroneum chain, allowing users to distribute or receive tokens in a community-driven manner.
+  Create and join airdrops on the Sonic chain, allowing users to distribute or receive tokens in a community-driven manner.
 
 - **Multiple Interfaces**
   - **Browser Extension**: Send transactions directly from Twitter.
@@ -20,7 +20,7 @@ Zero-X is an LLM-based AI Agent built on the Electroneum chain, designed to revo
 ## Tech Stack
 
 - **AI & LLM**: Groq
-- **Blockchain**: Electroneum Chain
+- **Blockchain**: Sonic Chain
 - **Web3 Integration**: Wallet mapping and transaction handling
 - **Frontend**: Browser extension & web application
 
