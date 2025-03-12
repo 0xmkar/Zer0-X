@@ -1,0 +1,24 @@
+services:
+  python-server:
+    container_name: python-server-zer0x
+    build:
+      context: ./extension
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+
+  node-server:
+    container_name: node-api-zer0x
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "5000:5000"
+
+  frontend:
+    container_name: frontend-zer0x
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"

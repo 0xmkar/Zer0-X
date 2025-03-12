@@ -4,10 +4,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import Users from "../models/User.js"; 
 import Airdrop from "../models/Airdrops.js"; 
-import { importWalletAndSendTokens, getBalanceWallet } from '../extension/wallet.mjs'
+import { importWalletAndSendTokens, getBalanceWallet } from './wallet.mjs'
 
 
-dotenv.config({ path: "../.env" });
+// dotenv.config({ path: "../.env" });
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
