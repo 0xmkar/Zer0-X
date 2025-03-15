@@ -1,11 +1,11 @@
-import SonicWallet from "./sonicWallet.mjs";
+import BaseWallet from "./BaseWallet.mjs";
 
-const sonicWallet = new SonicWallet('https://rpc.blaze.soniclabs.com');
+const baseWallet = new BaseWallet('https://base-sepolia.drpc.org');
 
 export async function importWalletAndSendTokens(privateKey, recipientAddress, amount) {
   try {
-    const walletInfo = await sonicWallet.createWallet(privateKey);
-    const balance = await sonicWallet.getBalance(walletInfo.address);
+    const walletInfo = await baseWallet.createWallet(privateKey);
+    const balance = await baseWallet.getBalance(walletInfo.address);
 
     if (parseFloat(balance) <= amount) {
       throw new Error("Insufficient balance to send tokens");
@@ -24,7 +24,7 @@ export async function importWalletAndSendTokens(privateKey, recipientAddress, am
 export async function sendTokens(recipientAddress, amount) {
 try {
   // Validate the recipient address
-  if (!sonicWallet.isValidSonicAddress(recipientAddress)) {
+  if (!baseWallet.isValidBaseAddress(recipientAddress)) {
     throw new Error("Invalid recipient address format");
   }
   
@@ -36,7 +36,7 @@ try {
   };
   
   // Send the transaction
-  const receipt = await sonicWallet.sendTransaction(recipientAddress, amount, options);
+  const receipt = await baseWallet.sendTransaction(recipientAddress, amount, options);
   
   console.log("📄 Transaction sent successfully! 📄 ");
   console.log(`Transaction hash: ${receipt.transactionHash}`);
@@ -55,8 +55,8 @@ try {
 
 export async function getBalanceWallet(privateKey) {
   try {
-    const walletInfo = await sonicWallet.createWallet(privateKey);
-    const balance = await sonicWallet.getBalance(walletInfo.address);
+    const walletInfo = await baseWallet.createWallet(privateKey);
+    const balance = await baseWallet.getBalance(walletInfo.address);
 
     return { status: 'success', details: { address:walletInfo.publicKey, balance } };
   } catch (error) {

@@ -39,7 +39,7 @@ def analyze_text():
         - amount of money
         - who to send money to 
 
-        - the currency should be in having their token symbol name in all small for example Bitcoin = btc , ethereum = eth , sonic = S , electroneum = ETN , 
+        - the currency should be in having their token symbol name in all small for example Bitcoin = btc , ethereum = eth , sonic = S , electroneum = ETN , base = ETH
         - If they have already given symbols like btc , eth , S , ETN then directly use that
         all this should be in a python list format for example : ["send", "eth", 0.5, "@JohnDoe"] or ["send", "btc", 0.01, "@JonhsonMayer"] or ["send", "sss", 0.4, "@OmkarJ639"]
         '''

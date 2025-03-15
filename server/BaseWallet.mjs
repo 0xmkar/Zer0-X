@@ -2,18 +2,18 @@ import { Wallet, JsonRpcApiProvider } from 'ethers';
 import Web3 from 'web3';
 import { isAddress } from 'web3-validator';
 
-class SonicWallet {
-    constructor(rpcUrl = "https://rpc.blaze.soniclabs.com") {
+class BaseWallet {
+    constructor(rpcUrl = "https://base-sepolia.drpc.org") {
         if (!rpcUrl) {
-            throw new Error('Sonic Network RPC URL is required');
+            throw new Error('Base Network RPC URL is required');
         }
-        // Connect to Sonic Network
+        // Connect to Base Sepolia testnet
         this.web3 = new Web3(rpcUrl);
         this.wallet = null;
         
-        // Sonic Network specific configurations
-        this.SONIC_CHAIN_ID = 57054; // Sonic testnet chain ID
-        this.NATIVE_TOKEN_DECIMALS = 18; // Sonic's native token 'S' decimals
+        // Base Sepolia testnet specific configurations
+        this.BASE_CHAIN_ID = 84532; // Base Sepolia testnet chain ID
+        this.NATIVE_TOKEN_DECIMALS = 18; // ETH decimals
     }
 
     /**
@@ -29,7 +29,7 @@ class SonicWallet {
                 this.wallet = Wallet.createRandom();
             }
 
-            // Connect wallet to Sonic network
+            // Connect wallet to Base Sepolia network
             const provider = new JsonRpcApiProvider(this.web3.currentProvider.url);
             this.wallet = this.wallet.connect(provider);
 
@@ -39,14 +39,14 @@ class SonicWallet {
                 privateKey: this.wallet.privateKey
             };
         } catch (error) {
-            throw new Error(`Failed to create Sonic wallet: ${error.message}`);
+            throw new Error(`Failed to create Base wallet: ${error.message}`);
         }
     }
 
     /**
-     * Get balance of native token 'S'
+     * Get balance of native token (ETH)
      * @param {string} address - Wallet address to check balance
-     * @returns {string} Balance in S tokens
+     * @returns {string} Balance in ETH
      */
     async getBalance(address) {
         try {
@@ -55,17 +55,17 @@ class SonicWallet {
             }
 
             const balance = await this.web3.eth.getBalance(address);
-            // Convert from smallest unit to S tokens
+            // Convert from smallest unit to ETH
             return this.web3.utils.fromWei(balance, 'ether');
         } catch (error) {
-            throw new Error(`Failed to get S token balance: ${error.message}`);
+            throw new Error(`Failed to get ETH balance: ${error.message}`);
         }
     }
 
     /**
-     * Send S tokens on Sonic network
+     * Send ETH on Base Sepolia network
      * @param {string} toAddress - Recipient address
-     * @param {string} amount - Amount in S tokens
+     * @param {string} amount - Amount in ETH
      * @param {Object} options - Transaction options
      * @returns {Object} Transaction receipt
      */
@@ -79,20 +79,20 @@ class SonicWallet {
                 throw new Error('Recipient address and amount are required');
             }
 
-            // Convert S tokens to smallest unit
+            // Convert ETH to smallest unit (wei)
             const valueInWei = this.web3.utils.toWei(amount.toString(), 'ether');
 
-            // Get current network gas price on Sonic
+            // Get current network gas price on Base Sepolia
             const gasPrice = options.gasPrice || await this.web3.eth.getGasPrice();
             
-            // Prepare transaction for Sonic network
+            // Prepare transaction for Base Sepolia network
             const transaction = {
                 to: toAddress,
                 value: valueInWei,
                 gasLimit: options.gasLimit || '21000', // Standard gas limit for native token transfer
                 gasPrice: gasPrice,
                 nonce: await this.web3.eth.getTransactionCount(this.wallet.address),
-                chainId: this.SONIC_CHAIN_ID
+                chainId: this.BASE_CHAIN_ID
             };
 
             // Sign and send transaction
@@ -101,21 +101,21 @@ class SonicWallet {
 
             return receipt;
         } catch (error) {
-            throw new Error(`Failed to send S tokens: ${error.message}`);
+            throw new Error(`Failed to send ETH: ${error.message}`);
         }
     }
 
     /**
-     * Validate if address is valid on Sonic network
+     * Validate if address is valid Ethereum address
      * @param {string} address - Address to validate
      * @returns {boolean} Whether address is valid
      */
-    isValidSonicAddress(address) {
+    isValidBaseAddress(address) {
         return isAddress(address);
     }
 
     /**
-     * Get transaction status on Sonic network
+     * Get transaction status on Base Sepolia network
      * @param {string} txHash - Transaction hash
      * @returns {Object} Transaction receipt
      */
@@ -123,9 +123,9 @@ class SonicWallet {
         try {
             return await this.web3.eth.getTransactionReceipt(txHash);
         } catch (error) {
-            throw new Error(`Failed to get transaction status on Sonic network: ${error.message}`);
+            throw new Error(`Failed to get transaction status on Base network: ${error.message}`);
         }
     }
 }
 
-export default SonicWallet;
+export default BaseWallet;

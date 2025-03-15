@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import LogoutButton from "../components/logoutButton";
 import LoginButton from "../components/loginButton";
-import SonicWallet from "../lib/wallet";
+import BaseWallet from "../lib/wallet";
 import AirdropParticipants from "./AirdropParticipants";
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
           `http://localhost:5000/api/twitter-username?twitterId=${twitterId}`
         );
         const data = await response.json();
-        setTwitterUsername(data.username || "stev3raj_");
+        setTwitterUsername(data.username);
         console.log(data);
       } catch (error) {
         console.error("Error fetching Twitter username:", error);
@@ -61,10 +61,10 @@ export default function Home() {
           setPrivateKey(userData.privateKey);
           const pub = userData.publicKey;
           const pvt = userData.privateKey;
-          console.log(JSON.stringify({ pub, pvt }) , "asdasddsadasdsaddassdaasd");
+          console.log(JSON.stringify({ pub, pvt }), "asdasddsadasdsaddassdaasd");
           
-          localStorage.setItem("pub" , pub)
-          localStorage.setItem("pvt" , pvt)
+          localStorage.setItem("pub", pub);
+          localStorage.setItem("pvt", pvt);
           window.postMessage({
             type: "FROM_PAGE",
             pub: pub,
@@ -76,7 +76,7 @@ export default function Home() {
       }
   
       // If user doesn't exist, create a new wallet
-      const newWallet = new SonicWallet("https://rpc.blaze.soniclabs.com");
+      const newWallet = new BaseWallet("https://base-sepolia.drpc.org");
       const wallet = await newWallet.createWallet();
   
       const publicKey = wallet.address;
@@ -85,8 +85,8 @@ export default function Home() {
       setWalletAddress(publicKey);
       setPrivateKey(privateKey);
   
-      localStorage.setItem("pub" , publicKey)
-      localStorage.setItem("pvt" , privateKey)
+      localStorage.setItem("pub", publicKey);
+      localStorage.setItem("pvt", privateKey);
       window.postMessage({
         type: "FROM_PAGE",
         pub: publicKey,
@@ -113,10 +113,16 @@ export default function Home() {
     }
   };
   
+  useEffect(() => {
+    if (user) {
+      fetchTwitterUsername();
+    }
+  }, [user]);
 
   useEffect(() => {
-    fetchTwitterUsername();
-    storeUserData();
+    if (user && twitterUsername) {
+      storeUserData();
+    }
   }, [user, twitterUsername]);
 
   if (isLoading) {
